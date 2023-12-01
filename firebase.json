@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "377177606599",
+    "project_id": "toekangku",
+    "storage_bucket": "toekangku.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:377177606599:android:9598280bfee40b7909b1e2",
+        "android_client_info": {
+          "package_name": "com.app.toekangku"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNUti8HMlNjcPMQq8gGQbVSnzaggDpjkk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
