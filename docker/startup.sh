@@ -7,10 +7,7 @@ sed -i "s,LISTEN_PORT,$PORT,g" /etc/nginx/nginx.conf
 php-fpm -D
 
 # Start Nginx
-nginx &
+nginx
 
-# Start Laravel queue worker in the background
-php artisan queue:work --tries=3 --daemon &
-
-# Keep the main process running
-wait -n
+# Start Laravel queue worker
+php artisan queue:work --sleep=3 --tries=3 --max-time=3600
