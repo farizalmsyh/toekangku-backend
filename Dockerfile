@@ -34,9 +34,6 @@ RUN cd /app && \
 # Set application directory ownership
 RUN chown -R www-data: /app
 
-# Install Telescope
-RUN php artisan telescope:install
-
 # Replace LISTEN_PORT placeholder with actual port
 RUN sed -i "s,LISTEN_PORT,$PORT,g" /etc/nginx/nginx.conf
 
