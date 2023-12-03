@@ -1,9 +1,13 @@
 #!/bin/sh
 
+# Replace LISTEN_PORT with the dynamic port assigned by Cloud Run
 sed -i "s,LISTEN_PORT,$PORT,g" /etc/nginx/nginx.conf
 
+# Start PHP-FPM
 php-fpm -D
 
-while ! nc -w 1 -z 127.0.0.1 9000; do sleep 0.1; done;
-
+# Start Nginx
 nginx
+
+# Start Laravel queue worker
+php artisan queue:work
