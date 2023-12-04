@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Jobs\TestJob;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +17,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::post('job-mail-test', function (Request $request) {
+    if($request->email) {
+        TestJob::dispatch($request->email);
+        return response()->json(['success' => true, 'message' => 'Success send email to '.$request->email]);
+    }
+    return response()->json(['success' => false, 'message' => 'Fail send email']);
 });
