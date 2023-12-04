@@ -1,7 +1,7 @@
 FROM php:7.4-fpm-alpine
 
 # Install necessary packages
-RUN apk update && apk add --no-cache libpq-dev nginx wget supervisor
+RUN apk update && apk add --no-cache libpq-dev nginx wget supervisord
 
 # Install PHP extensions
 RUN docker-php-ext-install pgsql pdo pdo_pgsql
@@ -31,7 +31,7 @@ RUN cd /app && /usr/local/bin/composer install --no-dev
 RUN chown -R www-data: /app
 
 # Copy Supervisor configuration for queue worker
-COPY docker/supervisord.conf /etc/supervisord.conf
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Command to start Supervisor
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
