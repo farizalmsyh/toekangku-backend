@@ -1,7 +1,7 @@
 FROM php:7.4-fpm-alpine
 
 # Install necessary packages
-RUN apk update && apk add --no-cache libpq-dev nginx wget supervisord
+RUN apk update && apk add --no-cache libpq-dev nginx wget supervisor
 
 # Install PHP extensions
 RUN docker-php-ext-install pgsql pdo pdo_pgsql
