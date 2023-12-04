@@ -255,8 +255,8 @@ class AuthController extends Controller
         $otp->code = $code;
         $otp->secret = $secret;
         $otp->save();
-        // SendOTPJob::dispatch($email, $secret);
-        Mail::to($email)->send(new SendOTPMail($email, $secret));
+        SendOTPJob::dispatch($email, $secret);
+        // Mail::to($email)->send(new SendOTPMail($email, $secret));
         return $secret;
     }
     
@@ -266,8 +266,8 @@ class AuthController extends Controller
         if($otp) {
             $otp->code = $code;
             $otp->save();
-            // SendOTPJob::dispatch($email, $secret);
-            Mail::to($email)->send(new SendOTPMail($email, $secret));
+            SendOTPJob::dispatch($email, $secret);
+            // Mail::to($email)->send(new SendOTPMail($email, $secret));
         }
     }
     
@@ -280,8 +280,8 @@ class AuthController extends Controller
         $forgot->code = $code;
         $forgot->secret = $secret;
         $forgot->save();
-        // SendTokenResetJob::dispatch($email, $secret);
-        Mail::to($email)->send(new SendTokenResetMail($email, $secret));
+        SendTokenResetJob::dispatch($email, $secret);
+        // Mail::to($email)->send(new SendTokenResetMail($email, $secret));
         return $secret;
     }
     
@@ -291,8 +291,8 @@ class AuthController extends Controller
         if($forgot) {
             $forgot->code = $code;
             $forgot->save();
-            // SendTokenResetJob::dispatch($email, $secret);
-            Mail::to($email)->send(new SendTokenResetMail($email, $secret));
+            SendTokenResetJob::dispatch($email, $secret);
+            // Mail::to($email)->send(new SendTokenResetMail($email, $secret));
         }
     }
 }
