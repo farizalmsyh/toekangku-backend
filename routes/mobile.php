@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'auth'], function () {
     Route::group(['middleware' => ['auth.sanctum']], function() {
         Route::get('user', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'user']);
+        Route::get('user/detail', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'userDetail']);
         Route::post('logout', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'logout']);
         Route::post('change-password', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'changePassword']);
         Route::group(['prefix' => 'sync'], function () {
@@ -37,6 +38,7 @@ Route::group(['middleware' => ['auth.sanctum']], function() {
     Route::group(['prefix' => 'seeker'], function () {
         Route::group(['prefix' => 'thread'], function () {
             Route::get('/', [App\Http\Controllers\Api\Mobile\Seeker\Thread\ThreadController::class, 'getThread']);
+            Route::get('/detail', [App\Http\Controllers\Api\Mobile\Seeker\Thread\ThreadController::class, 'getDetailThread']);
             Route::get('/my', [App\Http\Controllers\Api\Mobile\Seeker\Thread\ThreadController::class, 'getMyThread']);
             Route::post('/create', [App\Http\Controllers\Api\Mobile\Seeker\Thread\ThreadController::class, 'createThread']);
             Route::put('/update', [App\Http\Controllers\Api\Mobile\Seeker\Thread\ThreadController::class, 'updateThread']);
@@ -48,6 +50,7 @@ Route::group(['middleware' => ['auth.sanctum']], function() {
     Route::group(['prefix' => 'worker'], function () {
         Route::group(['prefix' => 'thread'], function () {
             Route::get('/', [App\Http\Controllers\Api\Mobile\Worker\Thread\ThreadController::class, 'getThread']);
+            Route::get('/detail', [App\Http\Controllers\Api\Mobile\Seeker\Thread\ThreadController::class, 'getDetailThread']);
             Route::get('/my', [App\Http\Controllers\Api\Mobile\Worker\Thread\ThreadController::class, 'getMyThread']);
             Route::post('/create', [App\Http\Controllers\Api\Mobile\Worker\Thread\ThreadController::class, 'createThread']);
             Route::put('/update', [App\Http\Controllers\Api\Mobile\Worker\Thread\ThreadController::class, 'updateThread']);

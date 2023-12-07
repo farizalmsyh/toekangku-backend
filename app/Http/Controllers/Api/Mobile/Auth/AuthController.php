@@ -23,7 +23,34 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = Auth::user();
-        return response()->json(['success' => true, 'data'=> $user]);
+        $response = [
+            'user' => $user,
+        ];
+        return response()->json(['success' => true, 'data'=> $response]);
+    }
+    public function userDetail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+	        'id' => 'required|numeric'
+	    ]);
+	    if ($validator->fails()) {
+	        return response()->json([
+	            'success' => false,
+	            'message' => $validator->errors()->all()[0],
+	        ], 422);
+	    }
+	    $valid = $validator->validated();
+        $user = User::where('users.id', $valid['id'])->first();
+        if(!$user) {
+            return response()->json([
+	            'success' => false,
+	            'message' => 'Pengguna tidak ditemukan',
+	        ], 404);
+        }
+        $response = [
+            'user' => $user,
+        ];
+        return response()->json(['success' => true, 'data'=> $response]);
     }
 
     public function login(Request $request)

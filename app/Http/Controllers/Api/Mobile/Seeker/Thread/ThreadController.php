@@ -64,10 +64,64 @@ class ThreadController extends Controller
                     ->offset($valid['offset'])
                     ->get();
         $response = [
-            'data' => $data,
+            'threads' => $data,
             'count' => $count,
             'limit' => $valid['limit'],
             'offset' => $valid['offset'],
+        ];
+        return response()->json(['success' => true, 'data' => $response]);
+    }
+    
+    public function getDetailThread(Request $request) {
+        $validator = Validator::make($request->all(), [
+	        'id' => 'required|numeric',
+	    ]);
+        if ($validator->fails()) {
+	        return response()->json([
+	            'success' => false,
+	            'message' => $validator->errors()->all()[0],
+	        ], 422);
+	    }
+	    $valid = $validator->validated();
+        $data = Thread::
+                    join('thread_profesions', 'thread_profesions.thread_id', '=', 'threads.id')
+                    ->leftJoin('thread_interests', 'thread_interests.thread_id', '=', 'threads.id')
+                    ->join('users', 'threads.user_id', '=', 'users.id')
+                    ->leftJoin(DB::raw('(SELECT user_id, AVG(score) as rating FROM user_ratings GROUP BY user_id) as ratings'), function ($join) {
+                        $join->on('users.id', '=', 'ratings.user_id');
+                    })
+                    ->where('threads.id', $valid['id'])
+                    ->select(
+                        'threads.*',
+                        'users.name as user_name',
+                        'users.profesion as user_profesion',
+                        'users.location_province as user_location_province',
+                        'users.location_city as user_location_city',
+                        'users.location_subdistrict as user_location_subdistrict',
+                        'users.location_village as user_location_village',
+                        DB::raw('ratings.rating as user_rating'),
+                        DB::raw("string_agg(thread_profesions.profesion, ', ') as profesions"),
+                        DB::raw('count(thread_interests.id) as total_interest') 
+                    )
+                    ->groupBy('threads.id', 'users.name', 'users.profesion', 'users.location_province', 'users.location_city', 'users.location_subdistrict', 'users.location_village', 'ratings.rating')
+                    ->first();
+        $interest = Interest::
+                    join('users', 'thread_interests.user_id', '=', 'users.id')
+                    ->leftJoin(DB::raw('(SELECT user_id, AVG(score) as rating FROM user_ratings GROUP BY user_id) as ratings'), function ($join) {
+                        $join->on('users.id', '=', 'ratings.user_id');
+                    })
+                    ->where('thread_interests.thread_id', $data->id)
+                    ->select(
+                        'thread_interests.*',
+                        'users.name as user_name',
+                        'users.profesion as user_profesion',
+                        'ratings.rating'
+                    )
+                    ->groupBy('thread_interests.id', 'users.name', 'users.profesion', 'ratings.rating')
+                    ->get();
+        $response = [
+            'thread' => $data,
+            'interest' => $interest
         ];
         return response()->json(['success' => true, 'data' => $response]);
     }
@@ -109,7 +163,7 @@ class ThreadController extends Controller
                     ->offset($valid['offset'])
                     ->get();
         $response = [
-            'data' => $data,
+            'threads' => $data,
             'count' => $count,
             'limit' => $valid['limit'],
             'offset' => $valid['offset'],
