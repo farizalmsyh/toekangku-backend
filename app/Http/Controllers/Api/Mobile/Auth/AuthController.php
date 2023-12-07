@@ -9,8 +9,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\SendOTPMail;
-use App\Mail\SendTokenResetMail;
 use App\Models\User;
 use App\Models\OtpCode;
 use App\Models\ForgotPassword;
@@ -194,7 +192,7 @@ class AuthController extends Controller
         $otp->status = 1;
         $otp->save();
         $response = [
-            'token' => $otp->token
+            'token' => 'Bearer '.$otp->token
         ];
         $user = User::where('email', $data['email'])->first();
         if (!$user->hasVerifiedEmail()) {
@@ -283,7 +281,6 @@ class AuthController extends Controller
         $otp->secret = $secret;
         $otp->save();
         SendOTPJob::dispatch($email, $secret);
-        // Mail::to($email)->send(new SendOTPMail($email, $secret));
         return $secret;
     }
     
@@ -294,7 +291,6 @@ class AuthController extends Controller
             $otp->code = $code;
             $otp->save();
             SendOTPJob::dispatch($email, $secret);
-            // Mail::to($email)->send(new SendOTPMail($email, $secret));
         }
     }
     
@@ -308,7 +304,6 @@ class AuthController extends Controller
         $forgot->secret = $secret;
         $forgot->save();
         SendTokenResetJob::dispatch($email, $secret);
-        // Mail::to($email)->send(new SendTokenResetMail($email, $secret));
         return $secret;
     }
     
@@ -319,7 +314,6 @@ class AuthController extends Controller
             $forgot->code = $code;
             $forgot->save();
             SendTokenResetJob::dispatch($email, $secret);
-            // Mail::to($email)->send(new SendTokenResetMail($email, $secret));
         }
     }
 }
