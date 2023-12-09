@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use App\Models\Experience;
 use App\Models\OtpCode;
 use App\Models\ForgotPassword;
 use App\Jobs\SendOTPJob;
@@ -94,6 +95,10 @@ class AuthController extends Controller
 	        'kode_pos' => 'required|numeric',
 	        'profesi' => 'required',
 	        'tahun_mulai_bekerja' => 'required|numeric',
+	        'pengalaman' => 'required|array',
+            'pengalaman.*.nama' => 'required',
+            'pengalaman.*.tanggal' => 'required|date',
+            'pengalaman.*.deskripsi' => 'required',
 	    ]);
 	    if ($validator->fails()) {
 	        return response()->json([
@@ -123,6 +128,16 @@ class AuthController extends Controller
         $user->profesion = $data['profesi'];
         $user->start_year = $data['tahun_mulai_bekerja'];
         $user->save();
+
+        $pengalaman = $data['pengalaman'];
+        for($i = 0; $i < count($pengalaman); $i++) {
+            $experience = new Experience;
+            $experience->user_id = $user->id;
+            $experience->name = $pengalaman[$i]['nama'];
+            $experience->date = $pengalaman[$i]['tanggal'];
+            $experience->description = $pengalaman[$i]['deskripsi'];
+            $experience->save();
+        }
 
         return response()->json(['success' => true, 'message' => 'Berhasil melakukan pendaftaran']);
     }

@@ -24,6 +24,31 @@ Route::group(['prefix' => 'auth'], function () {
             Route::post('fcm-token', [App\Http\Controllers\Api\Mobile\Auth\SyncController::class, 'syncFcmToken']);
             Route::post('location', [App\Http\Controllers\Api\Mobile\Auth\SyncController::class, 'syncLocation']);
         });
+        Route::group(['prefix' => 'experience'], function () {
+            Route::get('/', [App\Http\Controllers\Api\Mobile\Auth\ExperienceController::class, 'getExperience']);
+            Route::get('detail', [App\Http\Controllers\Api\Mobile\Auth\ExperienceController::class, 'getExperienceDetail']);
+            Route::post('create', [App\Http\Controllers\Api\Mobile\Auth\ExperienceController::class, 'createExperience']);
+            Route::put('update', [App\Http\Controllers\Api\Mobile\Auth\ExperienceController::class, 'updateExperience']);
+            Route::delete('delete', [App\Http\Controllers\Api\Mobile\Auth\ExperienceController::class, 'deleteExperience']);
+        });
+    });
+    Route::post('register', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'register']);
+    Route::post('login', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'login']);
+    Route::post('resend-otp', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'resendOTP']);
+    Route::post('submit-otp', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'submitOTP']);
+    Route::post('forgot-password', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'forgotPassword']);
+    Route::post('submit-reset-code', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'submitResetCode']);
+    Route::post('reset-password', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'resetPassword']);
+});
+
+Route::group(['prefix' => 'resource'], function () {
+    Route::group(['middleware' => ['auth.sanctum']], function() {
+        Route::group(['prefix' => 'region'], function () {
+            Route::get('province', [App\Http\Controllers\Api\Mobile\Resource\RegionController::class, 'getProvince']);
+            Route::get('city', [App\Http\Controllers\Api\Mobile\Resource\RegionController::class, 'getCity']);
+            Route::get('subdistrict', [App\Http\Controllers\Api\Mobile\Resource\RegionController::class, 'getSubdistrict']);
+            Route::get('village', [App\Http\Controllers\Api\Mobile\Resource\RegionController::class, 'getVillage']);
+        });
     });
     Route::post('register', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'register']);
     Route::post('login', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'login']);
