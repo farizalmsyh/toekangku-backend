@@ -60,6 +60,16 @@ Route::group(['prefix' => 'resource'], function () {
     Route::post('reset-password', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'resetPassword']);
 });
 
+Route::group(['prefix' => 'general'], function () {
+    Route::group(['middleware' => ['auth.sanctum']], function() {
+        Route::group(['prefix' => 'room'], function () {
+            Route::get('', [App\Http\Controllers\Api\Mobile\General\Chat\ChatController::class, 'getRoom']);
+            Route::get('chat', [App\Http\Controllers\Api\Mobile\General\Chat\ChatController::class, 'getChat']);
+            Route::post('chat/send', [App\Http\Controllers\Api\Mobile\General\Chat\ChatController::class, 'sendChat']);
+        });
+    });
+});
+
 Route::group(['middleware' => ['auth.sanctum']], function() {
     Route::group(['prefix' => 'seeker'], function () {
         Route::group(['prefix' => 'thread'], function () {
