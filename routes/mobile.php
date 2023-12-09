@@ -20,6 +20,7 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('user/detail', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'userDetail']);
         Route::post('logout', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'logout']);
         Route::post('change-password', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'changePassword']);
+        Route::post('change-picture', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'changePicture']);
         Route::group(['prefix' => 'sync'], function () {
             Route::post('fcm-token', [App\Http\Controllers\Api\Mobile\Auth\SyncController::class, 'syncFcmToken']);
             Route::post('location', [App\Http\Controllers\Api\Mobile\Auth\SyncController::class, 'syncLocation']);

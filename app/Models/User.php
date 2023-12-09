@@ -30,6 +30,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'picture',
         'remember_token',
     ];
 
@@ -41,4 +42,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = ['picture_url'];
+
+    public function getPictureUrlAttribute()
+    {
+        $hostname = config('custom.storage_hostname');
+        if($this->picture) {
+            return $hostname . $this->picture;
+        }
+        return null;
+    }
 }
