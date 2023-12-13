@@ -73,6 +73,7 @@ class AuthController extends Controller
         $token = $user->createToken('mobile')->plainTextToken;
         $secret = $this->createOTP($user->email, $token);
         $response = [
+            'email' => $data['email'],
             'secret' => $secret,
         ];
         return response()->json(['success' => true, 'message' => 'Login berhasil, silahkan tunggu Kode OTP melalui email anda!', 'data' => $response]);
