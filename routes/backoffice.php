@@ -22,3 +22,16 @@ Route::group(['prefix' => 'auth'], function () {
     });
     Route::post('login', [App\Http\Controllers\Api\Backoffice\Auth\AuthController::class, 'login']);
 });
+
+Route::group(['prefix' => 'thread'], function () {
+    Route::group(['middleware' => ['auth.sanctum']], function() {
+        Route::get('/', [App\Http\Controllers\Api\Backoffice\Thread\ThreadController::class, 'getThread']);
+        Route::put('/change-banned', [App\Http\Controllers\Api\Backoffice\Thread\ThreadController::class, 'changeBannedThread']);
+    });
+});
+
+Route::group(['prefix' => 'help'], function () {
+    Route::group(['middleware' => ['auth.sanctum']], function() {
+        Route::get('/', [App\Http\Controllers\Api\Backoffice\Help\HelpController::class, 'getHelp']);
+    });
+});

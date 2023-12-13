@@ -32,6 +32,9 @@ Route::group(['prefix' => 'auth'], function () {
             Route::put('update', [App\Http\Controllers\Api\Mobile\Auth\ExperienceController::class, 'updateExperience']);
             Route::delete('delete', [App\Http\Controllers\Api\Mobile\Auth\ExperienceController::class, 'deleteExperience']);
         });
+        Route::group(['prefix' => 'help'], function () {
+            Route::post('send', [App\Http\Controllers\Api\Mobile\General\Help\HelpController::class, 'sendHelp']);
+        });
     });
     Route::post('register', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'register']);
     Route::post('login', [App\Http\Controllers\Api\Mobile\Auth\AuthController::class, 'login']);

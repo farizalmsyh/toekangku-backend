@@ -46,7 +46,7 @@ class AuthController extends Controller
         }
         $token = $user->createToken('mobile')->plainTextToken;
         $response = [
-            'token' => $token,
+            'token' => 'Bearer '.$token,
         ];
         return response()->json(['success' => true, 'message' => 'Login berhasil!', 'data' => $response]);
     }
