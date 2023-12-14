@@ -19,6 +19,8 @@ use App\Services\FCMService;
 Route::group(['prefix' => 'auth'], function () {
     Route::group(['middleware' => ['auth.sanctum']], function() {
         Route::get('user', [App\Http\Controllers\Api\Backoffice\Auth\AuthController::class, 'user']);
+        Route::post('logout', [App\Http\Controllers\Api\Backoffice\Auth\AuthController::class, 'logout']);
+        Route::post('change-profile', [App\Http\Controllers\Api\Backoffice\Auth\AuthController::class, 'changePicture']);
     });
     Route::post('login', [App\Http\Controllers\Api\Backoffice\Auth\AuthController::class, 'login']);
 });
@@ -33,5 +35,15 @@ Route::group(['prefix' => 'thread'], function () {
 Route::group(['prefix' => 'help'], function () {
     Route::group(['middleware' => ['auth.sanctum']], function() {
         Route::get('/', [App\Http\Controllers\Api\Backoffice\Help\HelpController::class, 'getHelp']);
+    });
+});
+
+Route::group(['prefix' => 'user'], function () {
+    Route::group(['middleware' => ['auth.sanctum']], function() {
+        Route::get('/', [App\Http\Controllers\Api\Backoffice\User\UserController::class, 'getUser']);
+        Route::get('/detail', [App\Http\Controllers\Api\Backoffice\User\UserController::class, 'getUserDetail']);
+        Route::post('/create', [App\Http\Controllers\Api\Backoffice\User\UserController::class, 'createUser']);
+        Route::put('/update', [App\Http\Controllers\Api\Backoffice\User\UserController::class, 'updateUser']);
+        Route::delete('/delete', [App\Http\Controllers\Api\Backoffice\User\UserController::class, 'deleteUser']);
     });
 });

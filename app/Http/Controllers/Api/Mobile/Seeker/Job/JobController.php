@@ -51,7 +51,7 @@ class JobController extends Controller
                     )
                     ->groupBy('jobs.id', 'rating.score', 'worker.name', 'seeker.name')
                     ->orderBy('jobs.created_at');
-        $count = $query->count(DB::raw('jobs.id'));
+        $count = $query->get()->count(DB::raw('jobs.id'));
         $data = $query->limit($valid['limit'])
                     ->offset($valid['offset'])
                     ->get();

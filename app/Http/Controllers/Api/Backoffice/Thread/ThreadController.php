@@ -51,7 +51,7 @@ class ThreadController extends Controller
                     )
                     ->groupBy('threads.id', 'users.name', 'ratings.rating')
                     ->orderBy('threads.created_at', 'DESC');
-        $count = $query->count(DB::raw('DISTINCT threads.id'));
+        $count = $query->get()->count(DB::raw('DISTINCT threads.id'));
         $data = $query->limit($valid['limit'])
                     ->offset($valid['offset'])
                     ->get();

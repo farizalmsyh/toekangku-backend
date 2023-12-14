@@ -34,7 +34,7 @@ class HelpController extends Controller
             });
         }
         $query = $query->orderBy('created_at', 'DESC');
-        $count = $query->count(DB::raw('DISTINCT id'));
+        $count = $query->get()->count(DB::raw('DISTINCT id'));
         $data = $query->limit($valid['limit'])
                     ->offset($valid['offset'])
                     ->get();
