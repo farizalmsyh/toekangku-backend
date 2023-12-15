@@ -25,6 +25,15 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [App\Http\Controllers\Api\Backoffice\Auth\AuthController::class, 'login']);
 });
 
+Route::group(['prefix' => 'dashboard'], function () {
+    Route::group(['middleware' => ['auth.sanctum']], function() {
+        Route::get('/widget', [App\Http\Controllers\Api\Backoffice\Dashboard\DashboardController::class, 'getWidget']);
+        Route::get('/profession', [App\Http\Controllers\Api\Backoffice\Dashboard\DashboardController::class, 'getUserProfession']);
+        Route::get('/job', [App\Http\Controllers\Api\Backoffice\Dashboard\DashboardController::class, 'getJob']);
+        Route::get('/thread', [App\Http\Controllers\Api\Backoffice\Dashboard\DashboardController::class, 'getThread']);
+    });
+});
+
 Route::group(['prefix' => 'thread'], function () {
     Route::group(['middleware' => ['auth.sanctum']], function() {
         Route::get('/', [App\Http\Controllers\Api\Backoffice\Thread\ThreadController::class, 'getThread']);
