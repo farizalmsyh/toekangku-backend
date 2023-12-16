@@ -236,6 +236,7 @@ class AuthController extends Controller
         }
         $secret = $this->createResetCode($user->email);
         $response = [
+            'email' => $data['email'],
             'secret' => $secret,
         ];
         return response()->json(['success' => true, 'message' => 'Silahkan tunggu Kode melalui email anda!', 'data' => $response]);
