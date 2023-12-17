@@ -259,7 +259,12 @@ class AuthController extends Controller
         if(!$reset) {
             return response()->json(['success' => false, 'message' => 'Kode atur ulang password salah!'], 401);
         }
-        return response()->json(['success' => true, 'message' => 'Kode atur ulang password terverifikasi!']);
+        $response = [
+            'email' => $data['email'],
+            'secret' => $data['secret'],
+            'code' => $data['kode'],
+        ];
+        return response()->json(['success' => true, 'message' => 'Kode atur ulang password terverifikasi!', 'data' => $response]);
     }
     
     public function resetPassword(Request $request) {
