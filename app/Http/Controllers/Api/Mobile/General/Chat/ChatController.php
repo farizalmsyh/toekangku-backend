@@ -10,6 +10,7 @@ use App\Events\Chat\MessageEvent;
 use App\Models\User;
 use App\Models\Room;
 use App\Models\RoomMessage as Message;
+use Pusher\Pusher;
 use \Auth;
 
 class ChatController extends Controller
@@ -183,10 +184,39 @@ class ChatController extends Controller
         $message->user_id = Auth::id();
         $message->save();
 
-        $user = User::find($message->user_id);
+        $user = Auth::user();
 
-        broadcast(new MessageEvent($message->id, $message->room_id, $message->user_id, $user->name, $message->type, $message->message, $message->created_at));
-
-        return response()->json(['success' => true, 'message' => 'Berhasil mengirim pesan']);
+        broadcast(new MessageEvent(
+            $message->id,
+            $message->room_id,
+            $message->user_id,
+            $user->name,
+            $message->type,
+            $message->message,
+            $message->created_at
+        ));
+        
+        $data = [
+            'id' => $message->id,
+            'room_id' => $message->room_id,
+            'user_id' => $message->user_id,
+            'user_name' => $user->name,
+            'type' => $message->type,
+            'message' => $message->message,
+            'created_at' => $message->created_at
+        ];
+        $pusher = new Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            [
+                'cluster' => env('PUSHER_APP_CLUSTER'),
+                'useTLS' => true
+            ]
+        );
+        $response = $pusher->trigger('room.'.$message->room_id, 'message-event', $data);
+        if($response){
+            return response()->json(['success' => true, 'message' => 'Berhasil mengirim pesan']);
+        }
     }
 }

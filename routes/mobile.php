@@ -94,6 +94,9 @@ Route::group(['middleware' => ['auth.sanctum']], function() {
             Route::put('/confirm-done', [App\Http\Controllers\Api\Mobile\Seeker\Job\JobController::class, 'confirmDone']);
             Route::post('/send-review', [App\Http\Controllers\Api\Mobile\Seeker\Job\JobController::class, 'sendReview']);
         });
+        Route::group(['prefix' => 'worker'], function () {
+            Route::get('/', [App\Http\Controllers\Api\Mobile\Seeker\Worker\WorkerController::class, 'getWorker']);
+        });
     });
     Route::group(['prefix' => 'worker'], function () {
         Route::group(['prefix' => 'thread'], function () {

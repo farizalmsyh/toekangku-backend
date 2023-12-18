@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\UserRating as Rating;
 use App\Models\Experience;
 use App\Models\OtpCode;
 use App\Models\ForgotPassword;
@@ -40,15 +42,37 @@ class AuthController extends Controller
 	        ], 422);
 	    }
 	    $valid = $validator->validated();
-        $user = User::where('users.id', $valid['id'])->first();
+        $user = User::
+            leftJoin(DB::raw('(SELECT user_id, AVG(score) as rating FROM user_ratings GROUP BY user_id) as ratings'), function ($join) {
+                $join->on('users.id', '=', 'ratings.user_id');
+            })
+            ->where('users.id', $valid['id'])
+            ->select('users.*', 'ratings.rating')
+            ->first();
         if(!$user) {
             return response()->json([
 	            'success' => false,
 	            'message' => 'Pengguna tidak ditemukan',
 	        ], 404);
         }
+        $hostname = config('custom.storage_hostname');
+        $review = Rating::
+            join(DB::raw('users as sender'), 'sender.id', '=', 'user_ratings.sender_id')
+            ->leftJoin(DB::raw('(SELECT user_id, AVG(score) as rating FROM user_ratings GROUP BY user_id) as ratings'), function ($join) {
+                $join->on('sender.id', '=', 'ratings.user_id');
+            })
+            ->where('user_ratings.user_id', $user->id)
+            ->select(
+                'user_ratings.*', 
+                DB::raw('sender.name as sender_name'),
+                DB::raw('sender.profesion as sender_profesion'),
+                DB::raw('ratings.rating as sender_rating'),
+                DB::raw("CASE WHEN sender.picture IS NULL THEN NULL ELSE CONCAT('".$hostname."', sender.picture) END as sender_picture"),
+            )
+            ->get();
         $response = [
             'user' => $user,
+            'review' => $review,
         ];
         return response()->json(['success' => true, 'data'=> $response]);
     }

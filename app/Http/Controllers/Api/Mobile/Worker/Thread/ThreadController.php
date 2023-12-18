@@ -83,6 +83,7 @@ class ThreadController extends Controller
 	        ], 422);
 	    }
 	    $valid = $validator->validated();
+        $hostname = config('custom.storage_hostname');
         $data = Thread::
                     join('thread_profesions', 'thread_profesions.thread_id', '=', 'threads.id')
                     ->leftJoin('thread_interests', 'thread_interests.thread_id', '=', 'threads.id')
@@ -115,9 +116,10 @@ class ThreadController extends Controller
                         'thread_interests.*',
                         'users.name as user_name',
                         'users.profesion as user_profesion',
+                        DB::raw("CASE WHEN users.picture IS NULL THEN NULL ELSE CONCAT('".$hostname."', users.picture) END as user_picture"),
                         'ratings.rating'
                     )
-                    ->groupBy('thread_interests.id', 'users.name', 'users.profesion', 'ratings.rating')
+                    ->groupBy('thread_interests.id', 'users.name', 'users.profesion', 'ratings.rating', 'users.picture')
                     ->get();
         $response = [
             'thread' => $data,

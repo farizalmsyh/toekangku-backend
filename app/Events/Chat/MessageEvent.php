@@ -42,4 +42,8 @@ class MessageEvent
         return new Channel('room.'.$this->room_id);
     }
 
+    public function broadcastAs(){
+        return 'message-event';
+    }
+
 }
