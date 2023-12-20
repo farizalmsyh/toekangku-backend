@@ -106,6 +106,12 @@ class ThreadController extends Controller
                     )
                     ->groupBy('threads.id', 'users.name', 'users.profesion', 'users.location_province', 'users.location_city', 'users.location_subdistrict', 'users.location_village', 'ratings.rating')
                     ->first();
+        if(!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Postingan tidak ditemukan',
+            ], 404);
+        }
         $interest = Interest::
                     join('users', 'thread_interests.user_id', '=', 'users.id')
                     ->leftJoin(DB::raw('(SELECT user_id, AVG(score) as rating FROM user_ratings GROUP BY user_id) as ratings'), function ($join) {
