@@ -232,10 +232,11 @@ class AuthController extends Controller
         }
         $otp->status = 1;
         $otp->save();
-        $response = [
-            'token' => 'Bearer '.$otp->token
-        ];
         $user = User::where('email', $data['email'])->first();
+        $response = [
+            'token' => 'Bearer '.$otp->token,
+            'type' => $user->type
+        ];
         if (!$user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
         }
